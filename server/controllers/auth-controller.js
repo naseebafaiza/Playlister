@@ -73,6 +73,7 @@ loginUser = async (req, res) => {
         }).status(200).json({
             success: true,
             user: {
+                userName: existingUser.userName,
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,  
                 email: existingUser.email              
