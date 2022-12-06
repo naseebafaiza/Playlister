@@ -12,7 +12,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import logo from './logo.png';
-// hi
 
 export default function AppBanner() {
     const { auth } = useContext(AuthContext);
