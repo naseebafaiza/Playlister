@@ -31,7 +31,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
-    HIDE_MODALS: "HIDE_MODALS"
+    HIDE_MODALS: "HIDE_MODALS",
+    DUPLICATE_LISTS: "DUPLICATE_LIST",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -103,6 +104,20 @@ function GlobalStoreContextProvider(props) {
             }
             // CREATE A NEW LIST
             case GlobalStoreActionType.CREATE_NEW_LIST: {                
+                return setStore({
+                    currentModal : CurrentModal.NONE,
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    currentSongIndex: -1,
+                    currentSong: null,
+                    newListCounter: store.newListCounter + 1,
+                    listNameActive: false,
+                    listIdMarkedForDeletion: null,
+                    listMarkedForDeletion: null
+                })
+            }
+            // duplicate a list
+            case GlobalStoreActionType.DUPLICATE_LIST: {                
                 return setStore({
                     currentModal : CurrentModal.NONE,
                     idNamePairs: store.idNamePairs,
@@ -302,6 +317,34 @@ function GlobalStoreContextProvider(props) {
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
         }
+    }
+
+    store.duplicateList = async function () {
+        async function asyncDuplicateList() {
+            let response = await api.getPlaylistById(store.currentList._id);
+            if (response.data.success) {
+                let playlistToCopy = response.data.playlist
+                console.log(playlistToCopy)
+                let playlistName = "Copy of " + playlistToCopy.name
+                let response1 = await api.createPlaylist(playlistName, [], auth.user.email, auth.user.userName, 0, 0, []);
+                if (response1.status === 201) {
+                    playlistToCopy.name = playlistName
+                    let response2 = await api.updatePlaylistById(response1.data.playlist._id, playlistToCopy)
+                    console.log(response1.data.playlist._id);
+                    if (response2.data.success) {
+                        tps.clearAllTransactions();
+                        storeReducer({
+                            type: GlobalStoreActionType.DUPLICATE_LIST,
+                            payload: response2.data.playlist
+                        });
+                        history.push("/playlist/" + response2.data.id);
+                    }
+                } else {
+                    console.log("API FAILED TO CREATE A NEW LIST");
+                }
+            }
+        }
+        asyncDuplicateList();
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS

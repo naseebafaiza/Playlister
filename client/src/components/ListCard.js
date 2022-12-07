@@ -16,6 +16,8 @@ import thumbsDown from './thumbsDown.png';
 import workspace from './WorkspaceScreen';
 import WorkspaceScreen from './WorkspaceScreen';
 import EditToolbar from './EditToolbar';
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 
@@ -31,6 +33,14 @@ function ListCard(props) {
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair, selected, expanded } = props;
+    const theme = createTheme({
+        palette: {
+          coral: {
+            main: '#f7a8a5',
+            contrastText: '#f5f5f5',
+          },
+        },
+    });
     let showList = false;
 
     function handleLoadList(event, id) {
@@ -90,6 +100,13 @@ function ListCard(props) {
     if (idNamePair.published) {
         publishDate = idNamePair.publishDate.toString().substring(0, 10);
     }
+    let modalJSX = "";
+    if (store.isEditSongModalOpen()) {
+        modalJSX = <MUIEditSongModal />;
+    }
+    else if (store.isRemoveSongModalOpen()) {
+        modalJSX = <MUIRemoveSongModal />;
+    }
     function handleOpenList(e) {
         let button = document.getElementById('expandButton-'+idNamePair._id);
 
@@ -102,14 +119,19 @@ function ListCard(props) {
         }
 
     }
+    function handleDuplicateList(event) {
+        event.stopPropagation();
+        store.duplicateList();
+    }
     let songList = "";
     if (store.currentList) {
         if (store.currentList._id == idNamePair._id) {
             songList = (
                 <div>
+                  <ThemeProvider theme={theme}>
                   <List
                     id="playlist-cards"
-                    sx={{ width: "100%", bgcolor: "#000000" }}
+                    sx={{ width: "100%", bgcolor: "#404040" }}
                   >
                     {store.currentList.songs.map((song, index) => (
                       <SongCard
@@ -129,7 +151,29 @@ function ListCard(props) {
                     }}
                   >
                     <EditToolbar />
+                    <div
+                      style={{
+                        padding: "10px 15px 0px 10px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "28%",
+                      }}
+                    >
+                      <Button variant="contained" color="coral"
+                      onClick={(event) => {
+                        handleDuplicateList(event)
+                        }}>
+                        Duplicate
+                      </Button>
+                      <Button variant="contained" color="coral" 
+                        onClick={(event) => {
+                            handleDeleteList(event, idNamePair._id)
+                        }}>
+                        Delete
+                      </Button>
+                    </div>
                   </div>
+                </ThemeProvider>
                 </div>
               );
         }
@@ -189,8 +233,7 @@ function ListCard(props) {
     return (
         <Box>
             {cardElement}
-            <MUIRemoveSongModal/>
-            <MUIEditSongModal />
+            {modalJSX}
         </Box>
 
     );

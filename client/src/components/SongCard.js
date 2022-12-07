@@ -5,11 +5,21 @@ import Fab from '@mui/material/Fab'
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import EditSongModal from './MUIEditSongModal';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [ draggedTo, setDraggedTo ] = useState(0);
     const { song, index } = props;
+
+    const theme = createTheme({
+        palette: {
+          coral: {
+            main: '#eda49e',
+            contrastText: '#f5f5f5',
+          },
+        },
+    });
 
     function handleDragStart(event) {
         event.dataTransfer.setData("song", index);
@@ -53,6 +63,10 @@ function SongCard(props) {
         console.log("EDIT SONG ========>");
         store.showEditSongModal(index, song);
       }
+      let style = { height: "10px", width: "35px", visibility: 'visible' };
+    if (store.currentList.published) {
+      style = { height: "10px", width: "35px", visibility: 'hidden' }
+    }
 
     let cardClass = "list-card unselected-list-card";
     return (
@@ -69,37 +83,45 @@ function SongCard(props) {
         //onClick={handleClick}
         style={{ display: "flex", justifyContent: "space-between" }}
       >
-        <div>
-          {index + 1}.
-          <a
-            id={"song-" + index + "-link"}
-            className="song-link"
-            target="_blank"
-            href={"https://www.youtube.com/watch?v=" + song.youTubeId}
+        <ThemeProvider theme={theme}>
+          <div>
+            {index + 1}.
+            <a
+              id={"song-" + index + "-link"}
+              className="song-link"
+              target="_blank"
+              href={"https://www.youtube.com/watch?v=" + song.youTubeId}
+            >
+              {song.title} by {song.artist}
+            </a>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              width: "11%",
+              justifyContent: "space-between",
+            }}
           >
-            {song.title} by {song.artist}
-          </a>
-        </div>
-        <div style={{display: 'flex', width: '11%', justifyContent: 'space-between'}}>
-          <Fab
-            color="primary"
-            aria-label="edit"
-            id={"edit-song-" + index}
-            onClick={handleEditSong}
-            style={{ height: "10px", width: "35px" }}
-          >
-            <EditIcon />
-          </Fab>
-          <Fab
-            color="primary"
-            aria-label="remove"
-            id={"remove-song-" + index}
-            onClick={handleRemoveSong}
-            style={{ height: "10px", width: "35px" }}
-          >
-            <CloseIcon />
-          </Fab>
-        </div>
+            <Fab
+              color="coral"
+              aria-label="edit"
+              id={"edit-song-" + index}
+              onClick={handleEditSong}
+              style={style}
+            >
+              <EditIcon />
+            </Fab>
+            <Fab
+              color="coral"
+              aria-label="remove"
+              id={"remove-song-" + index}
+              onClick={handleRemoveSong}
+              style={style}
+            >
+              <CloseIcon />
+            </Fab>
+          </div>
+        </ThemeProvider>
       </div>
     );
 }
