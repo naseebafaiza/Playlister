@@ -12,6 +12,7 @@ export const AuthActionType = {
     LOGOUT_USER: "LOGOUT_USER",
     REGISTER_USER: "REGISTER_USER",
     ERROR: "ERROR",
+    GUEST: "GUEST"
 }
 
 const view = {
@@ -29,6 +30,11 @@ function AuthContextProvider(props) {
         view: view.NONE
     });
     const history = useHistory();
+    const visitor  = {
+        NONE: "NONE",
+        REGISTERED: "REGISTERED",
+        GUEST: "GUEST"
+    }
 
     useEffect(() => {
         auth.getLoggedIn();
@@ -67,6 +73,15 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     errorMessage: payload.errorMessage,
                     view: view.NONE,
+                })
+            }
+            case AuthActionType.GUEST: {
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: true,
+                    errorMessage: "",
+                    view: view.ALL_LISTS,
+                    visitor: visitor.GUEST
                 })
             }
             case AuthActionType.ERROR: {
@@ -171,6 +186,39 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.useAsGuest = async function () {
+        try {
+            let response = await api.registerUser("Guest", "Guest", "User", "guest@playlister.stonybrook.org", "password", "password");
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.GUEST,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                response = await api.loginUser("guest@playlister.stonybrook.org","password");
+                if (response.status === 200) {
+                    authReducer({
+                        type: AuthActionType.GUEST,
+                        payload: {
+                            user: response.data.user
+                        }
+                    })
+                }
+            }
+        } catch (error) {
+            let response2 = await api.loginUser("guest@playlister.stonybrook.org","password");
+            if (response2.status === 200) {
+                authReducer({
+                    type: AuthActionType.GUEST,
+                    payload: {
+                        user: response2.data.user
+                    }
+                })
+            }
+        }
     }
 
     return (

@@ -7,9 +7,9 @@
         @author McKilla Gorilla
     */
   --swatch-foundation: #252525;
-  --swatch-primary: #303030;
+  --swatch-primary: #68cde9;
   --swatch-complement: #a4b9eb;
-  --swatch-contrast: #111111;
+  --swatch-contrast: #ef8f8f;
   --swatch-accent: #669966;
   --swatch-status: #123456;
   --my-font-family: "Robaaaoto";
@@ -92,6 +92,11 @@ body {
 
 #playlister-logo {
   width: 500px;
+}
+
+#search-bar-label {
+  color: whitesmoke;
+  text-shadow:0px 4px 4px #000000;
 }
 
 #edit-toolbar {
@@ -211,12 +216,20 @@ body {
   max-height: 100%;
   position: absolute;
   left: 0%;
-  top: 13%;
+  top: 25%;
   width: 60%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
+}
+
+#comments{
+  overflow-y: scroll;
+}
+
+#comment-text-field-label{
+  color: whitesmoke;
 }
 
 #firstName-label {
@@ -280,7 +293,7 @@ body {
 .list-card[aria-disabled] {
   border: 1px solid #eda49e;
   background-color: #cccccc;
-  color: #666666;
+  color: #c1fcf0;
   pointer-events: none;
 }
 

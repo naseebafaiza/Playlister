@@ -328,7 +328,12 @@ function GlobalStoreContextProvider(props) {
                 let playlistName = "Copy of " + playlistToCopy.name
                 let response1 = await api.createPlaylist(playlistName, [], auth.user.email, auth.user.userName, 0, 0, []);
                 if (response1.status === 201) {
-                    playlistToCopy.name = playlistName
+                    playlistToCopy.name = playlistName;
+                    playlistToCopy.songs = playlistToCopy.songs;
+                    playlistToCopy.comments = [];
+                    playlistToCopy.likes = 0;
+                    playlistToCopy.dislikes = 0;
+                    playlistToCopy.listens = 0;
                     let response2 = await api.updatePlaylistById(response1.data.playlist._id, playlistToCopy)
                     console.log(response1.data.playlist._id);
                     if (response2.data.success) {
@@ -431,6 +436,27 @@ function GlobalStoreContextProvider(props) {
     }
     store.isErrorModalOpen = () => {
         return store.currentModal === CurrentModal.ERROR;
+    }
+
+    store.handleSearch = async function () {
+        let searchBar = document.getElementById("search-bar");
+        let searchFilter = function(idNamePair)  {
+            let name = idNamePair.name.toLowerCase();
+            let search = searchBar.value.toLowerCase();
+            return name.includes(search);
+        }
+        if (searchBar.value != '') {
+            let response = await api.getPlaylistPairs();
+            if (response.data.success) {
+                let pairsArray = response.data.idNamePairs;
+                store.idNamePairs = pairsArray.filter(searchFilter);
+                console.log(store.idNamePairs);
+            }
+
+        }
+        else {
+            store.loadIdNamePairs();
+        }
     }
 
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING

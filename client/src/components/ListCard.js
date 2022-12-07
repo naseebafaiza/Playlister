@@ -18,6 +18,7 @@ import WorkspaceScreen from './WorkspaceScreen';
 import EditToolbar from './EditToolbar';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AuthContext from '../auth'
 
 
 
@@ -33,6 +34,7 @@ function ListCard(props) {
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair, selected, expanded } = props;
+    const { auth } = useContext(AuthContext);
     const theme = createTheme({
         palette: {
           coral: {
@@ -59,7 +61,8 @@ function ListCard(props) {
 
     function handleToggleEdit(event) {
         event.stopPropagation();
-        toggleEdit();
+        if (auth.visitor === "REGISTERED" && auth.view === "HOME") 
+        {toggleEdit();}
     }
 
     function toggleEdit() {
@@ -119,6 +122,13 @@ function ListCard(props) {
         }
 
     }
+
+    function handleSetPlayerList(event, id) {
+        console.log("setting playerlist")
+        event.stopPropagation();
+        store.setPlayerList(id);
+    }
+ 
     function handleDuplicateList(event) {
         event.stopPropagation();
         store.duplicateList();
@@ -159,7 +169,10 @@ function ListCard(props) {
                         width: "28%",
                       }}
                     >
-                      <Button variant="contained" color="coral"
+                      <Button
+                      disabled= {auth.visitor === "GUEST"} 
+                      variant="contained" 
+                      color="coral"
                       onClick={(event) => {
                         handleDuplicateList(event)
                         }}>
@@ -179,19 +192,47 @@ function ListCard(props) {
         }
     }
 
+    let cardStyle = {
+        width: "100%",
+        fontSize: "24pt",
+        color: "whitesmoke",
+        backgroundColor: "#202020",
+        borderRadius: 8,
+        display: "flex",
+        flexDirection: "column",
+        cursor: "default",
+      };
+      if (store.playerList) {
+          if (idNamePair._id == store.playerList._id) {
+              cardStyle = {
+                  width: "100%",
+                  fontSize: "24pt",
+                  color: "whitesmoke",
+                  backgroundColor: "#a51e93",
+                  borderRadius: 8,
+                  display: "flex",
+                  flexDirection: "column",
+                  cursor: "default",
+                };
+          }
+      }
+
     let cardElement =
         <ListItem
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{borderRadius:"25px", p: "10px", bgcolor: '#8000F00F', marginTop: '15px', display: 'flex', p: 1 }}
-            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '24pt' }}
+            style={cardStyle}
             button
             // onClick={(event) => {
             //     handleLoadList(event, idNamePair._id)
             // }}
             onDoubleClick= {handleToggleEdit}
         >
-            <div style={{display: 'flex', width: '100%'}}> 
+            <div style={{display: 'flex', width: '100%'}}
+                onClick={(event) => {
+                    handleSetPlayerList(event, idNamePair._id) 
+                }}>  
                 <Box sx={{ p: 1, flexGrow: 1, overflowX: 'auto' }}>{idNamePair.name}<br></br>
                     <div style={{fontSize: '12pt', paddingLeft: '10px'}}>by: {idNamePair.userName}</div>
                 </Box>
