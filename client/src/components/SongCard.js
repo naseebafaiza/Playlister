@@ -1,6 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import Button from '@mui/material/Button';
+import Fab from '@mui/material/Fab'
+import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import EditSongModal from './MUIEditSongModal';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
@@ -37,43 +41,66 @@ function SongCard(props) {
     function handleRemoveSong(event) {
         store.showRemoveSongModal(index, song);
     }
-    function handleClick(event) {
-        // DOUBLE CLICK IS FOR SONG EDITING
-        if (event.detail === 2) {
-            console.log("double clicked");
-            store.showEditSongModal(index, song);
-        }
-    }
+    // function handleClick(event) {
+    //     // DOUBLE CLICK IS FOR SONG EDITING
+    //     if (event.detail === 2) {
+    //         console.log("double clicked");
+    //         store.showEditSongModal(index, song);
+    //     }
+    // }
+
+    function handleEditSong(event) {
+        console.log("EDIT SONG ========>");
+        store.showEditSongModal(index, song);
+      }
 
     let cardClass = "list-card unselected-list-card";
     return (
         <div
-            key={index}
-            id={'song-' + index + '-card'}
-            className={cardClass}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            draggable="true"
-            onClick={handleClick}
-        >
-            {index + 1}.
-            <a
-                id={'song-' + index + '-link'}
-                className="song-link"
-                target = "_blank"
-                href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
-                {song.title} by {song.artist}
-            </a>
-            <Button
-                sx={{transform:"translate(-5%, -5%)", width:"5px", height:"30px"}}
-                variant="contained"
-                id={"remove-song-" + index}
-                className="list-card-button"
-                onClick={handleRemoveSong}>{"\u2715"}</Button>
+        key={index}
+        id={"song-" + index + "-card"}
+        className={cardClass}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        draggable="true"
+        //onClick={handleClick}
+        style={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <div>
+          {index + 1}.
+          <a
+            id={"song-" + index + "-link"}
+            className="song-link"
+            target="_blank"
+            href={"https://www.youtube.com/watch?v=" + song.youTubeId}
+          >
+            {song.title} by {song.artist}
+          </a>
         </div>
+        <div style={{display: 'flex', width: '11%', justifyContent: 'space-between'}}>
+          <Fab
+            color="primary"
+            aria-label="edit"
+            id={"edit-song-" + index}
+            onClick={handleEditSong}
+            style={{ height: "10px", width: "35px" }}
+          >
+            <EditIcon />
+          </Fab>
+          <Fab
+            color="primary"
+            aria-label="remove"
+            id={"remove-song-" + index}
+            onClick={handleRemoveSong}
+            style={{ height: "10px", width: "35px" }}
+          >
+            <CloseIcon />
+          </Fab>
+        </div>
+      </div>
     );
 }
 

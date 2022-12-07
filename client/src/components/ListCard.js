@@ -15,6 +15,7 @@ import thumbsUp from './thumbsUp.png';
 import thumbsDown from './thumbsDown.png';
 import workspace from './WorkspaceScreen';
 import WorkspaceScreen from './WorkspaceScreen';
+import EditToolbar from './EditToolbar';
 
 
 
@@ -104,22 +105,33 @@ function ListCard(props) {
     let songList = "";
     if (store.currentList) {
         if (store.currentList._id == idNamePair._id) {
-            songList = <List 
-                id="playlist-cards"
-                sx={{ width: '100%', bgcolor: '#404040'}}
-            >
-                {
-                    store.currentList.songs.map((song, index) => (
-                        <SongCard
-                            id={'playlist-song-' + (index)}
-                            key={'playlist-song-' + (index)}
-                            index={index}
-                            song={song}
-                        />
-                    ))  
-
-                }
-             </List>;
+            songList = (
+                <div>
+                  <List
+                    id="playlist-cards"
+                    sx={{ width: "100%", bgcolor: "#000000" }}
+                  >
+                    {store.currentList.songs.map((song, index) => (
+                      <SongCard
+                        id={"playlist-song-" + index}
+                        key={"playlist-song-" + index}
+                        index={index}
+                        song={song}
+                      />
+                    ))}
+                  </List>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "space-between",
+                      padding: 5,
+                    }}
+                  >
+                    <EditToolbar />
+                  </div>
+                </div>
+              );
         }
     }
 
@@ -178,6 +190,7 @@ function ListCard(props) {
         <Box>
             {cardElement}
             <MUIRemoveSongModal/>
+            <MUIEditSongModal />
         </Box>
 
     );

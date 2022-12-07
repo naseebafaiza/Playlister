@@ -112,7 +112,7 @@ export default function AppBanner() {
                             <img src={logo} style={{height: '48px', paddingTop: "6%"}} alt= '⬠'/>
                         </Link>
                     </Typography>
-                    <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
+                    <Box sx={{ flexGrow: 1 }}></Box>
                     <Box sx={{ height: "90px", display: { xs: 'none', md: 'flex' } }}>
                         <IconButton
                             size="large"

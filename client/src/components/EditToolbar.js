@@ -50,13 +50,13 @@ function EditToolbar() {
                 variant="contained">
                     <RedoIcon />
             </Button>
-            <Button 
+            {/* <Button 
                 disabled={!store.canClose()}
                 id='close-button'
                 onClick={handleClose}
                 variant="contained">
                     <CloseIcon />
-            </Button>
+            </Button> */}
         </div>
     )
 }

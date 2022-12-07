@@ -8,6 +8,8 @@ import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import { width } from '@mui/system';
 import Typography from '@mui/material/Typography';
+import PageBanner from './PageBanner'
+
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -51,6 +53,7 @@ const HomeScreen = () => {
     
     return (
         <div>
+            <PageBanner />
             <div id="playlist-selector">
                 <div id="list-selector-heading">
                 <Fab 
