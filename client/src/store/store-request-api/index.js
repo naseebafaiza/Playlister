@@ -31,7 +31,9 @@ export const createPlaylist = (newListName, newSongs, userEmail, userName, likes
         ownerUserName: userName,
         likes: likes,
         dislikes: dislikes,
-        comments: newComments
+        comments: newComments,
+        published: false,
+        listens: 0
     })
 }
 export const deletePlaylistById = (id) => api.delete(`/playlist/${id}`)

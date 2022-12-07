@@ -272,6 +272,8 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
+        let button = document.getElementById('expandButton-'+store.currentList._id);
+        button.style.removeProperty('transform');
         storeReducer({
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
@@ -282,7 +284,7 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
-        let newListName = "Untitled" + store.newListCounter;
+        let newListName = auth.user.userName + " - Untitled (" + store.newListCounter + ")";
         const response = await api.createPlaylist(newListName, [], auth.user.email, auth.user.userName, 0, 0, []);
         console.log("createNewList response: " + response);
         if (response.status === 201) {

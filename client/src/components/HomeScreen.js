@@ -5,7 +5,9 @@ import MUIDeleteModal from './MUIDeleteModal'
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab'
 import List from '@mui/material/List';
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
+import { width } from '@mui/system';
+import Typography from '@mui/material/Typography';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -31,6 +33,7 @@ const HomeScreen = () => {
                         key={pair._id}
                         idNamePair={pair}
                         selected={false}
+                        expanded = {false}
                     />
                 ))
                 
@@ -45,25 +48,29 @@ const HomeScreen = () => {
             </Fab>
             </List>;
     }
+    
     return (
-        <div id="playlist-selector">
-            <div id="list-selector-heading">
-            <Fab sx={{transform:"translate(-20%, 0%)"}}
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab>
-                Your Playlists
+        <div>
+            <div id="playlist-selector">
+                <div id="list-selector-heading">
+                <Fab 
+                    color="primary" 
+                    aria-label="add"
+                    id="add-list-button"
+                    onClick={handleCreateNewList}
+                >
+                    <AddIcon />
+                </Fab>
+                    <Typography variant="h2">Your Lists</Typography>
+                </div>
+                <div id="list-selector-list">
+                    {
+                        listCard
+                    }
+                    <MUIDeleteModal />
+                </div>
+                <div id = 'player'></div>
             </div>
-            <Box sx={{bgcolor:"background.paper"}} id="list-selector-list">
-                {
-                    listCard
-                }
-                <MUIDeleteModal />
-            </Box>
         </div>)
 }
 
