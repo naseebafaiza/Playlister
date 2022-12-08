@@ -1,21 +1,22 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom'
 import AuthContext from '../auth';
 import { GlobalStoreContext } from '../store'
-import HomeIcon from '@mui/icons-material/Home';
-import GroupsIcon from '@mui/icons-material/Groups';
-import PersonIcon from '@mui/icons-material/Person';
-import Home from '@mui/icons-material/Home';
-import SortIcon from '@mui/icons-material/Sort';
-import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+
+import HomeIcon from '@mui/icons-material/Home';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonIcon from '@mui/icons-material/Person';
+import SortIcon from '@mui/icons-material/Sort';
+import SearchIcon from "@mui/icons-material/Search";
+import TextField from "@mui/material/TextField";
+import Fab from '@mui/material/Fab'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 
@@ -24,10 +25,34 @@ export default function PageBanner() {
     const { store } = useContext(GlobalStoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    const theme = createTheme({
+      palette: {
+        buttons: {
+          main: "black",
+          contrastText: "white",
+        },
+      },
+    });
 
     const handleSortMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
+    const handleGoHome = () => {
+      if (auth) {
+        store.goHome();
+      }
+    }
+    const handleGoAllLists = () => {
+      if (auth) {
+        store.goAllLists();
+      }
+    }
+    const handleGoUsers = () => {
+      if (auth) {
+        store.goUsers();
+      }
+    }
 
     const handleMenuClose = () => {
         setAnchorEl(null);
@@ -87,52 +112,74 @@ export default function PageBanner() {
           style={{ backgroundColor: "transparent" }}
         >
           <Toolbar>
-            <div style={{display: 'flex', width: '100%', justifyContent: 'space-between'}}>
             <div
               style={{
                 display: "flex",
+                width: "100%",
                 justifyContent: "space-between",
-                width: "8%",
-                paddingTop: 10
               }}
             >
-              <HomeIcon />
-              <GroupsIcon />
-              <PersonIcon />
-            </div>
-            <div style={{width: '40%'}}>
-            <form>
-              <TextField
-                InputProps={{ sx: { width: 550, color: "whitesmoke" } }}
-                id="search-bar"
-                className="text"
-                label="Search"
-                variant="outlined"
-                placeholder=""
-                size="small"
-              />
-              <IconButton aria-label="search" onClick={store.handleSearch}>
-                <SearchIcon style={{ fill: "whitesmoke" }} />
-              </IconButton>
-            </form>
-            </div>
-
-            <div>
-                Sort by
-            <IconButton
-                size="large"
-                edge="end"
-                aria-label="form of sorting"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleSortMenuOpen}
-                color="inherit"
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "10%",
+                  paddingTop: 10,
+                }}
               >
-                <SortIcon />
-              </IconButton>
-            </div>
-            </div>
+                <ThemeProvider theme={theme}>
+                  <Fab size="small" color='buttons' disabled={auth.visitor === "GUEST"} onClick={handleGoHome}>
+                    <HomeIcon />
+                  </Fab>
+                  <Fab size="small" color='buttons' onClick={handleGoAllLists}>
+                    <GroupsIcon />
+                  </Fab>
+                  <Fab size="small" color='buttons' onClick={handleGoUsers}>
+                    <PersonIcon />
+                  </Fab>
+                </ThemeProvider>
+              </div>
+              <div style={{ width: "40%" }}>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <TextField
+                    InputProps={{ sx: { width: 550, color: "whitesmoke" } }}
+                    id="search-bar"
+                    className="text"
+                    label="Search"
+                    variant="outlined"
+                    placeholder=""
+                    size="small"
+                    onKeyPress={(event) => {
+                      if (event.key === "Enter") {
+                        store.handleSearch();
+                      }
+                    }}
+                  />
+                  <IconButton aria-label="search" onClick={store.handleSearch}>
+                    <SearchIcon style={{ fill: "whitesmoke" }} />
+                  </IconButton>
+                </form>
+              </div>
 
+              <div>
+                Sort by
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="form of sorting"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleSortMenuOpen}
+                  color="inherit"
+                >
+                  <SortIcon />
+                </IconButton>
+              </div>
+            </div>
           </Toolbar>
         </AppBar>
         {sortMenu}

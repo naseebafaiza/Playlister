@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import { width } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import PageBanner from './PageBanner'
+import Player from './Player'
 
 /*
     This React component lists all the top5 lists in the UI.
@@ -72,7 +73,7 @@ const HomeScreen = () => {
                     }
                     <MUIDeleteModal />
                 </div>
-                <div id = 'player'></div>
+                <Player />
             </div>
         </div>)
 }
