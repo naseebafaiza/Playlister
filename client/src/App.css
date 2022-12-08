@@ -6,7 +6,7 @@
     
         @author McKilla Gorilla
     */
-  --swatch-foundation: #252525;
+  --swatch-foundation: #f27f7f;
   --swatch-primary: #68cde9;
   --swatch-complement: #a4b9eb;
   --swatch-contrast: #ef8f8f;
@@ -309,7 +309,7 @@ body {
 }
 
 .unselected-list-card {
-  background-color: #d6c4d8;
+  background-color: #efb6a0;
 }
 
 .list-card-button {
