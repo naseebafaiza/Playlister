@@ -73,6 +73,11 @@ function ListCard(props) {
         setEditActive(newActive);
     }
 
+    function handlePublish(event) {
+        event.stopPropagation();
+        store.publish();
+    }
+
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         let _id = event.target.id;
@@ -134,8 +139,50 @@ function ListCard(props) {
         store.duplicateList();
     }
     let songList = "";
+    let toolbar = <EditToolbar />;
+    let publishButton = '';
+    let buttonsStyle = {
+      padding: "10px 15px 0px 10px",
+      display: "flex",
+      justifyContent: "space-between",
+      width: "28%",
+    };
+    let flexStyle = {
+      display: "flex",
+      width: "100%",
+      justifyContent: "end",
+      padding: 5,
+    };
+    if (!idNamePair.published) {
+        publishButton = (
+          <Button
+            variant="contained"
+            color="coral"
+            onClick={(event) => {
+                handlePublish(event)
+            }}
+          >
+            Publish
+          </Button>
+        );
+        buttonsStyle = {
+            padding: "10px 15px 0px 10px",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "39%",
+        };
+        flexStyle = {
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            padding: 5,
+        }
+    }
     if (store.currentList) {
         if (store.currentList._id == idNamePair._id) {
+            if (store.currentList.published) {
+                toolbar= "";
+            }
             songList = (
                 <div>
                   <ThemeProvider theme={theme}>
@@ -160,14 +207,11 @@ function ListCard(props) {
                       padding: 5,
                     }}
                   >
-                    <EditToolbar />
+                    {toolbar}
                     <div
-                      style={{
-                        padding: "10px 15px 0px 10px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "28%",
-                      }}
+                      
+                      style={buttonsStyle}
+
                     >
                       <Button
                       disabled= {auth.visitor === "GUEST"} 
@@ -184,6 +228,7 @@ function ListCard(props) {
                         }}>
                         Delete
                       </Button>
+                      {publishButton}
                     </div>
                   </div>
                 </ThemeProvider>

@@ -79,7 +79,7 @@ function SongCard(props) {
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        draggable="true"
+        draggable={!store.currentList.published}
         //onClick={handleClick}
         style={{ display: "flex", justifyContent: "space-between" }}
       >

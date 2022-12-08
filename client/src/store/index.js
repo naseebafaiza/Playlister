@@ -67,6 +67,13 @@ function GlobalStoreContextProvider(props) {
 
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
     const { auth } = useContext(AuthContext);
+    const sort = {
+        PUBLISH_DATE: "PUBLISH_DATE",
+        NAME: "NAME",
+        LISTENS: "LISTENS",
+        LIKES: "LIKES",
+        DISLIKES: "DISLIKES"
+    }
     console.log("auth: " + auth);
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -334,6 +341,8 @@ function GlobalStoreContextProvider(props) {
                     playlistToCopy.likes = 0;
                     playlistToCopy.dislikes = 0;
                     playlistToCopy.listens = 0;
+                    playlistToCopy.published = false;
+                    playlistToCopy.publishDate = new Date();
                     let response2 = await api.updatePlaylistById(response1.data.playlist._id, playlistToCopy)
                     console.log(response1.data.playlist._id);
                     if (response2.data.success) {
@@ -445,7 +454,7 @@ function GlobalStoreContextProvider(props) {
             let search = searchBar.value.toLowerCase();
             return name.includes(search);
         }
-        if (searchBar.value != '') {
+        if (searchBar.value !== '') {
             let response = await api.getPlaylistPairs();
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
@@ -458,7 +467,25 @@ function GlobalStoreContextProvider(props) {
             store.loadIdNamePairs();
         }
     }
-
+    store.publish = function () {
+        store.currentList.published = true;
+        store.currentList.publishDate = new Date();
+        console.log(store.currentList);
+        async function asyncUpdateCurrentList() {
+          console.log(store.currentList);
+          const response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+          if (response.data.success) {
+              history.push("/playlist/" + store.currentList._id);
+              storeReducer({
+                  type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
+                  payload: {}
+              });
+              history.push('/');
+          }
+      }
+      asyncUpdateCurrentList();
+  
+      }
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
     // OF A LIST, WHICH INCLUDES DEALING WITH THE TRANSACTION STACK. THE
     // FUNCTIONS ARE setCurrentList, addMoveItemTransaction, addUpdateItemTransaction,

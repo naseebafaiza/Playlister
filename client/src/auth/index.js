@@ -49,6 +49,7 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     errorMessage: null,
                     view: auth.view,
+                    visitor: auth.visitor
                 });
             }
             case AuthActionType.LOGIN_USER: {
@@ -57,6 +58,7 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     errorMessage: payload.errorMessage,
                     view: view.HOME,
+                    visitor: visitor.REGISTERED
                 })
             }
             case AuthActionType.LOGOUT_USER: {
@@ -65,6 +67,7 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     errorMessage: null,
                     view: view.NONE,
+                    visitor: visitor.NONE
                 })
             }
             case AuthActionType.REGISTER_USER: {
@@ -73,6 +76,7 @@ function AuthContextProvider(props) {
                     loggedIn: payload.loggedIn,
                     errorMessage: payload.errorMessage,
                     view: view.NONE,
+                    visitor: visitor.NONE
                 })
             }
             case AuthActionType.GUEST: {
@@ -90,6 +94,7 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     errorMessage: payload.errorMessage,
                     view: auth.view,
+                    visitor: auth.visitor
                 })
             }
             default:

@@ -7,7 +7,7 @@ export default function HomeWrapper() {
     const { auth } = useContext(AuthContext);
     console.log("HomeWrapper auth.loggedIn: " + auth.loggedIn);
     
-    if (auth.visitor === "GUEST" || auth.visitor === "REGISTERED")
+    if (auth.visitor === "REGISTERED"  || auth.visitor === "GUEST")
         return <HomeScreen />
     else
         return <SplashScreen />
