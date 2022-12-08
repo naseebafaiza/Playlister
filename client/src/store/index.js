@@ -33,6 +33,7 @@ export const GlobalStoreActionType = {
     REMOVE_SONG: "REMOVE_SONG",
     HIDE_MODALS: "HIDE_MODALS",
     DUPLICATE_LISTS: "DUPLICATE_LIST",
+    SORT_BY: "SORT_BY",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -67,13 +68,7 @@ function GlobalStoreContextProvider(props) {
 
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
     const { auth } = useContext(AuthContext);
-    const sort = {
-        PUBLISH_DATE: "PUBLISH_DATE",
-        NAME: "NAME",
-        LISTENS: "LISTENS",
-        LIKES: "LIKES",
-        DISLIKES: "DISLIKES"
-    }
+    
     console.log("auth: " + auth);
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -367,6 +362,11 @@ function GlobalStoreContextProvider(props) {
             const response = await api.getPlaylistPairs();
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
+                pairsArray.sort(function (a, b) {
+                    if (!a.published) return 1;
+                    if (!b.published) return -1;
+                    return new Date(b.date) - new Date(a.date);
+                  });
                 console.log(pairsArray);
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
@@ -420,6 +420,40 @@ function GlobalStoreContextProvider(props) {
             type: GlobalStoreActionType.EDIT_SONG,
             payload: {currentSongIndex: songIndex, currentSong: songToEdit}
         });        
+    }
+    store.publishDateSort = async function () {
+        store.idNamePairs.sort(function(a,b) {
+            if (!a.published) return 1;
+            if (!b.published) return -1;
+            return new Date(b.date) - new Date(a.date);
+        })
+        history.push('/')
+    }
+    store.nameSort = async function () {
+        store.idNamePairs.sort(function(a, b){
+            if(a.name.toLowerCase() < b.name.toLowerCase()) { return -1; }
+            if(a.name.toLowerCase > b.name.toLowerCase) { return 1; }
+            return 0;
+        });
+        history.push('/');
+    }
+    store.listensSort = async function () {
+        store.idNamePairs.sort(function(a, b){
+            return b.listens - a.listens;
+        })
+        history.push('/');
+    }
+    store.likesSort = async function () {
+        store.idNamePairs.sort(function(a, b){
+            return b.likes - a.likes;
+        })
+        history.push('/');
+    }
+    store.dislikesSort = async function () {
+        store.idNamePairs.sort(function(a, b){
+            return b.dislikes - a.dislikes;
+        })
+        history.push('/');
     }
     store.showRemoveSongModal = (songIndex, songToRemove) => {
         storeReducer({
