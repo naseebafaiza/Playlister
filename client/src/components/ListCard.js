@@ -19,6 +19,11 @@ import EditToolbar from './EditToolbar';
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AuthContext from '../auth'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import Fab from '@mui/material/Fab'
+import { useHistory } from 'react-router-dom'
+
 
 
 
@@ -40,6 +45,10 @@ function ListCard(props) {
           coral: {
             main: '#f7a8a5',
             contrastText: '#f5f5f5',
+          },
+          buttons: {
+            main: "#303030",
+            contrastText: "#f5f5f5",
           },
         },
     });

@@ -12,7 +12,10 @@ export const AuthActionType = {
     LOGOUT_USER: "LOGOUT_USER",
     REGISTER_USER: "REGISTER_USER",
     ERROR: "ERROR",
-    GUEST: "GUEST"
+    GUEST: "GUEST",
+    VIEW_HOME: "VIEW_HOME",
+    VIEW_ALL_LISTS: "VIEW_ALL_LISTS",
+    VIEW_USERS: "VIEW_USERS"
 }
 
 const view = {
@@ -72,8 +75,8 @@ function AuthContextProvider(props) {
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
-                    user: payload.user,
-                    loggedIn: payload.loggedIn,
+                    user: null,
+                    loggedIn: false,
                     errorMessage: payload.errorMessage,
                     view: view.NONE,
                     visitor: visitor.NONE
@@ -94,6 +97,33 @@ function AuthContextProvider(props) {
                     loggedIn: false,
                     errorMessage: payload.errorMessage,
                     view: auth.view,
+                    visitor: auth.visitor
+                })
+            }
+            case AuthActionType.VIEW_HOME: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.loggedIn,
+                    errorMessage: "",
+                    view: view.HOME,
+                    visitor: auth.visitor
+                })
+            }
+            case AuthActionType.VIEW_ALL_LISTS: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.loggedIn,
+                    errorMessage: "",
+                    view: view.ALL_LISTS,
+                    visitor: auth.visitor
+                })
+            }
+            case AuthActionType.VIEW_USERS: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.loggedIn,
+                    errorMessage: "",
+                    view: view.USERS,
                     visitor: auth.visitor
                 })
             }
@@ -191,6 +221,25 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.goHome = function() {
+        authReducer( {
+            type: AuthActionType.VIEW_HOME,
+            payload: {}
+        })
+    }
+    auth.goAllLists = function() {
+        authReducer( {
+            type: AuthActionType.VIEW_ALL_LISTS,
+            payload: {}
+        })
+    }
+    auth.goUsers = function() {
+        authReducer( {
+            type: AuthActionType.VIEW_USERS,
+            payload: {}
+        })
     }
 
     auth.useAsGuest = async function () {

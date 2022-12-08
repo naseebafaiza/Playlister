@@ -41,7 +41,7 @@ function Comments() {
           variant="standard"
           placeholder=""
           size="small"
-          disabled={auth.user.userName === store.playerList.ownerUserName}
+          disabled={!store.playerList.published}
           style={{ paddingTop: 20 }}
           onKeyPress={(event) => {
             if (event.key === "Enter") {
